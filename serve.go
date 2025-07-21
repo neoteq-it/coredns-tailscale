@@ -24,9 +24,9 @@ const (
 
 func (t *Tailscale) resolveA(domainName string, msg *dns.Msg) {
 
-	name := strings.TrimSuffix(strings.ToLower(domainName), ".")
-	log.Debugf("Found an v4 entry after lookup for: %s", name)
+	name := strings.Split(strings.ToLower(domainName), ".")[0]
 	entries, ok := t.entries[name]["A"]
+	log.Info(name)
 	if ok {
 		log.Debugf("Found an v4 entry after lookup for: %s", name)
 		for _, entry := range entries {
@@ -45,8 +45,7 @@ func (t *Tailscale) resolveA(domainName string, msg *dns.Msg) {
 
 func (t *Tailscale) resolveAAAA(domainName string, msg *dns.Msg) {
 
-	name := strings.TrimSuffix(strings.ToLower(domainName), ".")
-	log.Debugf("Found a v6 entry after lookup for: %s", name)
+	name := strings.Split(strings.ToLower(domainName), ".")[0]
 	entries, ok := t.entries[name]["AAAA"]
 	if ok {
 		log.Debugf("Found a v6 entry after lookup for: %s", name)
@@ -66,7 +65,7 @@ func (t *Tailscale) resolveAAAA(domainName string, msg *dns.Msg) {
 
 func (t *Tailscale) resolveCNAME(domainName string, msg *dns.Msg, lookupType int) {
 
-	name := strings.TrimSuffix(strings.ToLower(domainName), ".")
+	name := strings.Split(domainName, ".")[0]
 	targets, ok := t.entries[name]["CNAME"]
 	if ok {
 		log.Debugf("Found a CNAME entry after lookup for: %s", name)
@@ -104,7 +103,6 @@ func (t *Tailscale) handleNoRecords(ctx context.Context, w dns.ResponseWriter, r
 func (t *Tailscale) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
 	log.Debugf("Received request for name: %v", r.Question[0].Name)
 	log.Debugf("Tailscale peers list has %d entries", len(t.entries))
-	log.Debugf("Tailscale peers list %s", t.entries)
 
 	msg := dns.Msg{}
 	msg.SetReply(r)
