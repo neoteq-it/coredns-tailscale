@@ -1,4 +1,4 @@
-module github.com/damomurf/coredns-tailscale
+module github.com/neoteq-it/coredns-tailscale
 
 go 1.24.2
 
