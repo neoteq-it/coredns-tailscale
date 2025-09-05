@@ -65,7 +65,7 @@ func (t *Tailscale) resolveAAAA(domainName string, msg *dns.Msg) {
 
 func (t *Tailscale) resolveCNAME(domainName string, msg *dns.Msg, lookupType int) {
 
-	name := strings.Split(domainName, ".")[0]
+	name := strings.Split(strings.ToLower(domainName), ".")[0]
 	targets, ok := t.entries[name]["CNAME"]
 	if ok {
 		log.Debugf("Found a CNAME entry after lookup for: %s", name)
