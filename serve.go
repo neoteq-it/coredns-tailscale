@@ -123,6 +123,10 @@ func (t *Tailscale) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	case dns.TypeCNAME:
 		log.Debug("Handling CNAME record lookup")
 		t.resolveCNAME(name, &msg, TypeAll)
+
+	case dns.TypePTR:
+		log.Debug("Handling PTR record lookup")
+		t.resolvePTR(name, &msg)
 	}
 	defer t.mu.RUnlock()
 
